@@ -4,39 +4,44 @@ import android.os.Bundle
 import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.gomedia.Fragments.HomeFragment
+import com.example.gomedia.Fragments.NotificationFragment
+import com.example.gomedia.Fragments.ProfileFragment
+import com.example.gomedia.Fragments.SearchFragment
 import com.example.gomedia.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var textView: TextView
+    internal var selectedFrag: Fragment? = null
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.nav_home -> {
-                textView.setText("Home")
-                return@OnNavigationItemSelectedListener true
+                selectedFrag = HomeFragment()
             }
             R.id.nav_search -> {
-                textView.setText("Search")
-                return@OnNavigationItemSelectedListener true
+                selectedFrag = SearchFragment()
             }
             R.id.nav_add -> {
-                textView.setText("Add")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.nav_heart -> {
-                textView.setText("Heart")
-                return@OnNavigationItemSelectedListener true
+                selectedFrag = NotificationFragment()
             }
             R.id.nav_profile_icon -> {
-                textView.setText("Profile Icon")
-                return@OnNavigationItemSelectedListener true
+                selectedFrag = ProfileFragment()
             }
         }
 
+        if (selectedFrag != null){
+            supportFragmentManager.beginTransaction().replace(
+                androidx.fragment.R.id.fragment_container_view_tag, selectedFrag!!
+            ).commit()
+        }
         false
     }
 
@@ -48,8 +53,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        textView = findViewById(R.id.message)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
+        supportFragmentManager.beginTransaction().replace(
+            androidx.fragment.R.id.fragment_container_view_tag,
+            HomeFragment()
+        ).commit()
 
     }
 }
