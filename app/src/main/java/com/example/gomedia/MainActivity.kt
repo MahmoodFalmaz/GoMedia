@@ -17,31 +17,29 @@ import com.example.gomedia.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    internal var selectedFrag: Fragment? = null
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.nav_home -> {
-                selectedFrag = HomeFragment()
+                selectedFrag(HomeFragment())
+                return@OnNavigationItemSelectedListener true
             }
             R.id.nav_search -> {
-                selectedFrag = SearchFragment()
+                selectedFrag(SearchFragment())
+                return@OnNavigationItemSelectedListener true
             }
             R.id.nav_add -> {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.nav_heart -> {
-                selectedFrag = NotificationFragment()
+                selectedFrag(NotificationFragment())
+                return@OnNavigationItemSelectedListener true
             }
             R.id.nav_profile_icon -> {
-                selectedFrag = ProfileFragment()
+                selectedFrag(ProfileFragment())
+                return@OnNavigationItemSelectedListener true
             }
         }
 
-        if (selectedFrag != null){
-            supportFragmentManager.beginTransaction().replace(
-                androidx.fragment.R.id.fragment_container_view_tag, selectedFrag!!
-            ).commit()
-        }
         false
     }
 
@@ -55,10 +53,14 @@ class MainActivity : AppCompatActivity() {
         val navView: BottomNavigationView = findViewById(R.id.nav_view)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
-        supportFragmentManager.beginTransaction().replace(
-            androidx.fragment.R.id.fragment_container_view_tag,
-            HomeFragment()
-        ).commit()
+        selectedFrag(HomeFragment())
 
+    }
+
+    private fun selectedFrag (fragment: Fragment){
+
+        val selected = supportFragmentManager.beginTransaction()
+        selected.replace(R.id.fragment_container_view_tag, fragment)
+        selected.commit()
     }
 }
